@@ -13,7 +13,7 @@ build:
   services:
     - docker:20.10.16-dind
   script:
-    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker build -t $IMAGE_NAME:$IMAGE_TAG swap-app
     - docker push $IMAGE_NAME:$IMAGE_TAG
 
