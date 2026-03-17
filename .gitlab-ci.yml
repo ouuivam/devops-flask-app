@@ -3,22 +3,32 @@ stages:
   - deploy
 
 variables:
-  DOCKER_DRIVER: overlay2   # pour Docker-in-Docker
+  IMAGE_NAME: "uiaam/swap-flask-app"
+  IMAGE_TAG: "latest"
+  DOCKER_DRIVER: overlay2  # nécessaire pour Docker-in-Docker
 
 build:
   stage: build
   image: docker:20.10.16
   services:
-    - docker:20.10.16-dind
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
   script:
-    - docker build -t uiaam/swap-flask-app:latest swap-app
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker push uiaam/swap-flask-app:latest
+    - echo "Login to Docker Hub"
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - echo "Build Docker image"
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG swap-app
+    - echo "Push Docker image to Docker Hub"
+    - docker push $IMAGE_NAME:$IMAGE_TAG
 
 deploy:
   stage: deploy
   image: bitnami/kubectl:latest
   script:
-    - export KUBECONFIG=/home/gitlab-runner/.kube/config
+    - echo "Set KUBECONFIG"
+    - mkdir -p ~/.kube
+    - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+    - echo "Deploying to K3s"
     - kubectl apply -f kubernetes/deployment.yaml
     - kubectl apply -f kubernetes/service.yaml
