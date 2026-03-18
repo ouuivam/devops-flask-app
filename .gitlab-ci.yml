@@ -5,23 +5,36 @@ stages:
 variables:
   IMAGE_NAME: "uiaam/swap-flask-app"
   IMAGE_TAG: "latest"
-  DOCKER_DRIVER: overlay2   # pour Docker-in-Docker
+  DOCKER_DRIVER: overlay2
 
 build:
   stage: build
   image: docker:20.10.16
   services:
-    - docker:20.10.16-dind   #  uniquement 1 service dind
+    - name: docker:20.10.16-dind
+      command: ["--tls=false"]   # éviter problèmes TLS DinD
+  variables:
+    DOCKER_TLS_CERTDIR: ""       # obligatoire pour DinD
   script:
+    - echo "Login Docker"
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin
+    - echo "Build Docker image"
     - docker build -t $IMAGE_NAME:$IMAGE_TAG swap-app
+    - echo "Push Docker image"
     - docker push $IMAGE_NAME:$IMAGE_TAG
+  only:
+    - main
 
 deploy:
   stage: deploy
   image: bitnami/kubectl:latest
+  needs: [build]  # s'assure que le build est terminé avant deploy
   script:
+    - echo "Write KUBECONFIG file"
     - echo "$KUBECONFIG_CONTENT" > kubeconfig
     - export KUBECONFIG=$PWD/kubeconfig
+    - echo "Deploy to K3s"
     - kubectl apply -f kubernetes/deployment.yaml
     - kubectl apply -f kubernetes/service.yaml
+  only:
+    - main
