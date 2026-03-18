@@ -28,12 +28,10 @@ build:
 deploy:
   stage: deploy
   image: bitnami/kubectl:latest
-  needs: [build]  # s'assure que le build est terminé avant deploy
+  needs: [build]
   script:
-    - echo "Write KUBECONFIG file"
-    - echo "$KUBECONFIG_CONTENT"  > kubeconfig
-    - export KUBECONFIG=$PWD/kubeconfig
-    - echo "Deploy to K3s"
+    - powershell -Command "[System.IO.File]::WriteAllBytes('kubeconfig', [System.Convert]::FromBase64String('$env:KUBECONFIG_CONTENT'))"
+    - set KUBECONFIG=%CD%\kubeconfig
     - kubectl apply -f kubernetes/deployment.yaml
     - kubectl apply -f kubernetes/service.yaml
   only:
