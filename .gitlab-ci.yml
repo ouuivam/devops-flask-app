@@ -31,7 +31,7 @@ deploy:
   needs: [build]  # s'assure que le build est terminé avant deploy
   script:
     - echo "Write KUBECONFIG file"
-    - echo "$KUBECONFIG_CONTENT" > kubeconfig
+    - echo "$KUBECONFIG_CONTENT"  > kubeconfig
     - export KUBECONFIG=$PWD/kubeconfig
     - echo "Deploy to K3s"
     - kubectl apply -f kubernetes/deployment.yaml
