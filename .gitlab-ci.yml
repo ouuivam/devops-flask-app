@@ -27,7 +27,7 @@ build:
 
 deploy:
   stage: deploy
-  image: bitnami/kubectl:latest
+  image: alpine/kubectl:latest  # Alpine a base64
   needs: [build]
   script:
     - echo "Créer kubeconfig depuis la variable base64"
