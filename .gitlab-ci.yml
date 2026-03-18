@@ -12,14 +12,14 @@ build:
   image: docker:20.10.16
   services:
     - name: docker:20.10.16-dind
-      command: ["--tls=false"]   # éviter problèmes TLS DinD
+      command: ["--tls=false"]
   variables:
-    DOCKER_TLS_CERTDIR: ""       # obligatoire pour DinD
+    DOCKER_TLS_CERTDIR: ""
   script:
     - echo "Login Docker"
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin
     - echo "Build Docker image"
-    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG swap-app
     - echo "Push Docker image"
     - docker push $IMAGE_NAME:$IMAGE_TAG
   only:
