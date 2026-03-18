@@ -31,8 +31,8 @@ deploy:
   needs: [build]
   script:
     - powershell -Command "[System.IO.File]::WriteAllBytes('kubeconfig', [System.Convert]::FromBase64String('$env:KUBECONFIG_CONTENT'))"
-    - set KUBECONFIG=%CD%\kubeconfig
-    - kubectl apply -f kubernetes/deployment.yaml
-    - kubectl apply -f kubernetes/service.yaml
+    - powershell -Command "$env:KUBECONFIG = \"$PWD\kubeconfig\""
+    - powershell -Command "kubectl apply -f kubernetes/deployment.yaml"
+    - powershell -Command "kubectl apply -f kubernetes/service.yaml"
   only:
     - main
