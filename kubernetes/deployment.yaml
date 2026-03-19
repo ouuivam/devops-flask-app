@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swap-flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swap-flask-app
+  template:
+    metadata:
+      labels:
+        app: swap-flask-app
+    spec:
+      containers:
+      - name: swap-flask-app
+        image: uiaam/swap-flask-app:latest
+        ports:
+        - containerPort: 5000
