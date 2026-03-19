@@ -30,8 +30,15 @@ deploy:
   image: bitnami/kubectl:latest
   needs: [build]
   script:
-    - echo "$KUBECONFIG_CONTENT" > kubeconfig
-    - export KUBECONFIG=$PWD/kubeconfig
+    - echo "Setup kubeconfig"
+    - mkdir -p ~/.kube
+    - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+    - export KUBECONFIG=~/.kube/config
+
+    - echo "Test cluster connection"
+    - kubectl get nodes
+
+    - echo "Deploy app"
     - kubectl apply -f kubernetes/deployment.yaml
     - kubectl apply -f kubernetes/service.yaml
   only:
