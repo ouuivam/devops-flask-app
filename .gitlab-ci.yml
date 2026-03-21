@@ -43,5 +43,6 @@ deploy:
     - echo "Deploy app"
     - kubectl apply -f kubernetes/deployment.yaml
     - kubectl apply -f kubernetes/service.yaml
+    - kubectl rollout restart deployment swap-flask-app
   only:
     - main
