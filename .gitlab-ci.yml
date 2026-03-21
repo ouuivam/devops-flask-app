@@ -17,6 +17,8 @@ build:
     DOCKER_TLS_CERTDIR: ""
   script:
     - echo "Login Docker Hub"
+    - echo "DOCKER_USER=$DOCKER_USER"
+    - echo "DOCKER_PASSWORD=${DOCKER_PASSWORD:0:4}****"
     - echo "$DOCKER_PASSWORD" | docker login docker.io -u "$DOCKER_USER" --password-stdin
     - echo "Build Docker image"
     - docker build -t $IMAGE_NAME:$IMAGE_TAG -f swap-app/Dockerfile swap-app
