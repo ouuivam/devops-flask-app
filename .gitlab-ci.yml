@@ -8,6 +8,9 @@ variables:
   IMAGE_TAG: "latest"
   DOCKER_DRIVER: overlay2
 
+# ----------------------------
+# Build Docker image
+# ----------------------------
 build:
   stage: build
   image: docker:20.10.16
@@ -28,25 +31,24 @@ build:
   only:
     - main
 
+# ----------------------------
+# Test avec pytest
+# ----------------------------
 test:
   stage: test
-  image: docker:20.10.16
-  services:
-    - docker:20.10.16-dind
+  image: python:3.9
   before_script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
-    - apk add --no-cache curl
+    - pip install --upgrade pip
+    - pip install -r swap-app/requirements.txt
+    - pip install pytest
   script:
-    - echo "Start container..."
-    - docker run -d -p 5000:5000 --name test_container $IMAGE_NAME:$IMAGE_TAG
-    - sleep 5
-    - echo "Test API from runner..."
-    - curl -f http://localhost:5000 || exit 1
-    - docker stop test_container
-    - docker rm test_container
+    - pytest swap-app/tests --maxfail=1 --disable-warnings -q
   only:
     - main
 
+# ----------------------------
+# Deploy sur Kubernetes
+# ----------------------------
 deploy:
   stage: deploy
   image:
@@ -58,10 +60,8 @@ deploy:
     - mkdir -p ~/.kube
     - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
     - export KUBECONFIG=~/.kube/config
-
     - echo "Test cluster connection"
     - kubectl get nodes
-
     - echo "Deploy app"
     - kubectl apply -f kubernetes/deployment.yaml
     - kubectl apply -f kubernetes/service.yaml
