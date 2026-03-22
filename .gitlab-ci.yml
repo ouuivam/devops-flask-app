@@ -43,7 +43,8 @@ test:
     - pip install pytest
     - export PYTHONPATH="$PYTHONPATH:$CI_PROJECT_DIR/swap-app"
   script:
-    - pytest tests --maxfail=1 --disable-warnings -q
+  - export PYTHONPATH="$CI_PROJECT_DIR/swap_app:$PYTHONPATH"
+  - pytest tests --maxfail=1 --disable-warnings -q
   only:
     - main
 # ----------------------------
