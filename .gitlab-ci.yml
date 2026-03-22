@@ -40,8 +40,8 @@ test:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
   script:
     - echo "Running tests in Docker container..."
-    # Lance le conteneur et exécute les tests unitaires ou API
-    - docker run --rm $DOCKER_IMAGE:$CI_COMMIT_SHA pytest --maxfail=1 --disable-warnings
+    # On utilise le même tag que le build
+    - docker run --rm $IMAGE_NAME:$IMAGE_TAG pytest --maxfail=1 --disable-warnings
   only:
     - main
 
