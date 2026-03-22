@@ -40,8 +40,8 @@ test:
     - echo "Start container..."
     - docker run -d -p 5000:5000 --name test_container $IMAGE_NAME:$IMAGE_TAG
     - sleep 5
-    - echo "Test API from container..."
-    - docker exec test_container curl -f http://localhost:5000 || exit 1
+    - echo "Test API from runner..."
+    - curl -f http://localhost:5000 || exit 1
     - docker stop test_container
     - docker rm test_container
   only:
