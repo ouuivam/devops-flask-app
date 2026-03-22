@@ -42,10 +42,9 @@ test:
     - pip install -r swap-app/requirements.txt
     - pip install pytest
   script:
-    - pytest swap-app/tests --maxfail=1 --disable-warnings -q
+    - pytest tests --maxfail=1 --disable-warnings -q
   only:
     - main
-
 # ----------------------------
 # Deploy sur Kubernetes
 # ----------------------------
