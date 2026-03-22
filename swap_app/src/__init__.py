@@ -61,9 +61,8 @@ def create_app():
 	return app
 
 
-
-from flask import render_template
+from flask import Flask
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return "Welcome to Swap App!", 200
