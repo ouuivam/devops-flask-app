@@ -22,4 +22,4 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5000
 
-CMD ["python", "run.py"]
+CMD ["python", "run.py" ,"--host", "0.0.0.0"]
