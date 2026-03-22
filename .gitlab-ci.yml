@@ -25,7 +25,7 @@ build:
     - echo "Logging in to Docker Hub"
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
     - echo "Build Docker image"
-    - docker build -t $IMAGE_NAME:$IMAGE_TAG -f swap-app/Dockerfile swap-app
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG -f swap_app/Dockerfile swap_app
     - echo "Push Docker image"
     - docker push $IMAGE_NAME:$IMAGE_TAG
   only:
@@ -39,14 +39,15 @@ test:
   image: python:3.9
   before_script:
     - pip install --upgrade pip
-    - pip install -r swap-app/requirements.txt
+    - pip install -r swap_app/requirements.txt
     - pip install pytest
-    - export PYTHONPATH="$PYTHONPATH:$CI_PROJECT_DIR/swap-app"
+    # Ajouter le dossier swap_app au PYTHONPATH pour les imports
+    - export PYTHONPATH="$CI_PROJECT_DIR/swap_app:$PYTHONPATH"
   script:
-  - export PYTHONPATH="$CI_PROJECT_DIR/swap_app:$PYTHONPATH"
-  - pytest tests --maxfail=1 --disable-warnings -q
+    - pytest tests --maxfail=1 --disable-warnings -q
   only:
     - main
+
 # ----------------------------
 # Deploy sur Kubernetes
 # ----------------------------
