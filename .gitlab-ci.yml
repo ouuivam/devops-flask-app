@@ -27,6 +27,23 @@ build:
   only:
     - main
 
+test:
+  stage: test
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  dependencies:
+    - build
+  before_script:
+    - echo "Logging in to Docker registry..."
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+  script:
+    - echo "Running tests in Docker container..."
+    # Lance le conteneur et exécute les tests unitaires ou API
+    - docker run --rm $DOCKER_IMAGE:$CI_COMMIT_SHA pytest --maxfail=1 --disable-warnings
+  only:
+    - main
+
 deploy:
   stage: deploy
   image:
