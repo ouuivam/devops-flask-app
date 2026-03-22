@@ -19,7 +19,7 @@ build:
     - echo "Waiting for Docker daemon..."
     - until docker info >/dev/null 2>&1; do sleep 2; done
     - echo "Logging in to Docker Hub"
-    - echo "'$DOCKER_PASSWORD'" | docker login -u "$DOCKER_USER" --password-stdin
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
     - echo "Build Docker image"
     - docker build -t $IMAGE_NAME:$IMAGE_TAG -f swap-app/Dockerfile swap-app
     - echo "Push Docker image"
