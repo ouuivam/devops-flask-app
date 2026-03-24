@@ -66,5 +66,69 @@ Ce projet a pour but de démontrer la maîtrise d’une chaîne DevOps complète
 * Containerisation
 * Orchestration Kubernetes
 
+⚙️ Prérequis
 
+Avant de lancer le projet, assure-toi d’avoir installé :
+
+Docker
+Kubernetes (Minikube ou cluster cloud)
+Terraform
+Ansible
+Python 3.9+
+Git
+🔽 Cloner le projet
+git clone https://gitlab.com/ton-username/devops-project.git
+cd devops-project/docker
+🐳 Lancer l’application en local (Docker)
+cd swap_app
+docker build -t swap-flask-app .
+docker run -p 5000:5000 swap-flask-app
+
+👉 Accéder à l’application :
+http://localhost:5000
+
+☁️ Provisionner l’infrastructure (Terraform)
+cd terraform
+terraform init
+terraform apply
+
+👉 Cela crée les machines nécessaires (ex: AWS EC2)
+
+⚙️ Configurer les machines (Ansible)
+cd ../ansible
+ansible-playbook -i inventory setup.yml
+
+👉 Installe Docker et prépare l’environnement Kubernetes
+
+☸️ Déployer sur Kubernetes
+cd ../kubernetes
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+
+👉 Vérifier :
+
+kubectl get pods
+kubectl get services
+🔄 Pipeline CI/CD (GitLab)
+
+Le pipeline est défini dans .gitlab-ci.yml et comporte 3 étapes :
+
+Build
+Build et push de l’image Docker vers Docker Hub
+Test
+Exécution des tests avec pytest
+Deploy
+Déploiement automatique sur Kubernetes
+
+👉 Le pipeline se déclenche automatiquement à chaque push sur main.
+
+🧪 Lancer les tests
+pytest tests
+🔐 Variables CI/CD
+
+Configurer dans GitLab :
+
+DOCKER_USER
+DOCKER_PASSWORD
+KUBECONFIG_CONTENT
 
