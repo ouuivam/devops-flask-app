@@ -77,7 +77,7 @@ Ansible
 Python 3.9+
 Git
 🔽 Cloner le projet
-git clone https://gitlab.com/ton-username/devops-project.git
+git clone https://gitlab.com/ouuivam/devops-project.git
 cd devops-project/docker
 🐳 Lancer l’application en local (Docker)
 cd swap_app
